@@ -1,4 +1,4 @@
-# arduino cyberlight
+# Arduino Cyberlight
 
 ![Bild](lampe.jpg) 
 
@@ -19,9 +19,9 @@
 - 8x Widerstand 3k3 Ohm 
 - Trafo 12V
 
-## Aufbau
-+12V - LED Streifen - MOSFET Drain
-GND - MOSFET Source
-Arduino Pins 3, 9, 10, 11 - R3k3 - MOSFET Gate - R3k3 - GND
-PCF8563 SCL - A5, SDA - A4
+## Verdrahtung
++12V - LED Streifen - MOSFET Drain  
+GND - MOSFET Source  
+Arduino Pins 3, 9, 10, 11 - R3k3 - MOSFET Gate - R3k3 - GND  
+PCF8563 SCL - A5, SDA - A4  
 
