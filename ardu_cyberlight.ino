@@ -1,16 +1,18 @@
-// Do not remove the include below
-#include "ardu_cyberlight.h"
+#include <Rtc_Pcf8563.h>
+#include <Adafruit_NeoPixel.h>
+#include <avr/power.h>
 
-#include "libraries/Rtc_Pcf8563/Rtc_Pcf8563.h"
-
+#define WS2812_PIN  6
+#define NUM_LEDS  2
 #define LED_RED		11
 #define LED_GREEN	9
 #define LED_BLUE	10
-#define LED_WHITE	3
+#define LED_WHITE	8
 
 #define MAX_BRIGHT	255
 
 Rtc_Pcf8563 rtc;
+Adafruit_NeoPixel pixels(NUM_LEDS, WS2812_PIN, NEO_GRB + NEO_KHZ800);
 
 uint16_t cycle_from_clock(uint32_t minSinceMidnight, bool up);
 void hue_to_rgb(uint16_t cycle, uint8_t *r, uint8_t *g, uint8_t *b);
@@ -19,7 +21,7 @@ void set_RGB();
 uint16_t w = 0;
 uint8_t tcnt = 0;
 char inbuf[6];
-int rdptr = 0;
+uint8_t rdptr = 0;
 
 void printTime()
 {
@@ -39,18 +41,26 @@ void timeToRGB()
 	analogWrite(LED_RED, r);
 	analogWrite(LED_GREEN, g);
 	analogWrite(LED_BLUE, b);
+
+  for(int i=0;i<NUM_LEDS;i++){
+    pixels.setPixelColor(i, pixels.Color(r, g, b)); // Moderately bright green color.
+  }
+  pixels.show(); // This sends the updated pixel color to the hardware.
 }
 
 //The setup function is called once at startup of the sketch
 void setup()
 {
+  pinMode(LED_WHITE, OUTPUT);
 	analogWrite(LED_WHITE, 0);
-	timeToRGB();
 	pinMode(LED_RED, OUTPUT);
 	pinMode(LED_GREEN, OUTPUT);
 	pinMode(LED_BLUE, OUTPUT);
-	pinMode(LED_WHITE, OUTPUT);
-	Serial.begin(115200);
+	pinMode(WS2812_PIN, OUTPUT);
+  pixels.begin();
+  pixels.clear();
+  timeToRGB();
+  Serial.begin(115200);
 }
 
 // The loop function is called in an endless loop
@@ -139,4 +149,3 @@ uint16_t cycle_from_clock(uint32_t minSinceMidnight, bool up)
 	}
 	return cycle;
 }
-
